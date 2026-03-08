@@ -3,521 +3,436 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loom OS | Student Workspace</title>
-    <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Loom X | Competitive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
         :root {
-            --bg: #05070a;
-            --sidebar: rgba(13, 17, 23, 0.8);
-            --card: rgba(22, 27, 34, 0.6);
-            --accent: #a855f7;
-            --accent-glow: rgba(168, 85, 247, 0.4);
-            --text: #f0f6fc;
-            --text-dim: #8b949e;
-            --border: rgba(48, 54, 61, 0.8);
-            --success: #238636;
-            --danger: #da3633;
-            --glass: blur(12px);
+            --bg: #020408;
+            --sidebar: rgba(8, 10, 15, 0.9);
+            --card: rgba(17, 22, 30, 0.7);
+            --accent: #8b5cf6;
+            --discord: #5865F2;
+            --accent-glow: rgba(139, 92, 246, 0.4);
+            --text: #f8fafc;
+            --text-dim: #64748b;
+            --border: rgba(255, 255, 255, 0.05);
+            --success: #10b981;
+            --danger: #f43f5e;
+            --warning: #f59e0b;
+            --glass: blur(20px) saturate(160%);
+        }
+
+        .theme-nord {
+            --bg: #2e3440;
+            --sidebar: #242933;
+            --card: rgba(59, 66, 82, 0.8);
+            --accent: #88c0d0;
+            --accent-glow: rgba(136, 192, 208, 0.4);
+            --text: #eceff4;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        
+        code, .mono { font-family: 'JetBrains Mono', monospace; }
+
         body { 
-            background: radial-gradient(circle at top right, #1a1033, #05070a);
-            color: var(--text); 
-            height: 100vh; 
-            overflow: hidden; 
+            background: var(--bg);
+            background-image: radial-gradient(at 0% 0%, var(--accent-glow) 0px, transparent 50%);
+            color: var(--text); height: 100vh; overflow: hidden; transition: background 0.3s;
         }
 
-        /* --- AUTH SCREEN --- */
-        #auth-screen { 
-            position: fixed; inset: 0; 
-            background: var(--bg); 
-            z-index: 9999; 
-            display: flex; align-items: center; justify-content: center; 
-            backdrop-filter: var(--glass);
-        }
-        .auth-box { 
-            background: var(--card); 
-            padding: 3rem; 
-            border-radius: 28px; 
-            width: 90%; max-width: 420px; 
-            border: 1px solid var(--border); 
-            text-align: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-        .auth-box h1 { font-size: 2.5rem; letter-spacing: -1px; margin-bottom: 0.5rem; }
-        .auth-box h1 span { color: var(--accent); }
+        #app-screen { display: none; height: 100vh; width: 100vw; display: flex; }
+        nav { width: 260px; background: var(--sidebar); backdrop-filter: var(--glass); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 1.5rem; }
+        main { flex: 1; padding: 2rem; overflow-y: auto; background: transparent; }
 
-        /* --- LAYOUT --- */
-        #app-screen { display: none; height: 100vh; width: 100vw; }
-        .layout { display: flex; height: 100%; }
-
-        nav { 
-            width: 280px; 
-            background: var(--sidebar); 
-            backdrop-filter: var(--glass);
-            border-right: 1px solid var(--border); 
-            display: flex; flex-direction: column; 
-            padding: 2rem 1.5rem; 
-        }
-
-        main { 
-            flex: 1; 
-            padding: 2.5rem; 
-            overflow-y: auto; 
-            background: transparent;
-        }
-
-        /* --- UI COMPONENTS --- */
-        .user-profile { 
-            background: rgba(255,255,255,0.03); 
-            padding: 12px; border-radius: 18px; 
-            margin-bottom: 2rem; border: 1px solid var(--border);
-            display: flex; align-items: center; gap: 12px; 
-        }
-        .avatar { 
-            width: 42px; height: 42px; 
-            background: linear-gradient(135deg, var(--accent), #6366f1); 
-            border-radius: 12px; display: flex; align-items: center; 
-            justify-content: center; font-weight: 800; color: white;
-        }
-
-        .nav-item { 
-            padding: 12px 16px; border-radius: 12px; cursor: pointer; 
-            margin-bottom: 8px; color: var(--text-dim); font-weight: 500; 
-            display: flex; align-items: center; gap: 12px; transition: 0.3s; 
-            text-decoration: none; border: 1px solid transparent;
-        }
-        .nav-item i { width: 18px; height: 18px; }
-        .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
-        .nav-item.active { 
-            background: var(--accent); color: white; 
-            box-shadow: 0 4px 15px var(--accent-glow);
-        }
-
-        .card { 
-            background: var(--card); 
-            backdrop-filter: var(--glass);
-            border-radius: 24px; 
-            padding: 1.5rem; 
-            border: 1px solid var(--border); 
-            transition: transform 0.2s;
-        }
+        .card { background: var(--card); backdrop-filter: var(--glass); border-radius: 20px; padding: 1.5rem; border: 1px solid var(--border); transition: 0.3s; }
         .card:hover { border-color: var(--accent); }
 
-        .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.5rem; }
-        .col-8 { grid-column: span 8; }
-        .col-4 { grid-column: span 4; }
-        .col-12 { grid-column: span 12; }
+        .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.25rem; }
+        .col-4 { grid-column: span 4; } .col-6 { grid-column: span 6; } .col-8 { grid-column: span 8; } .col-12 { grid-column: span 12; }
 
-        /* --- FEATURES --- */
-        .task-item {
-            display: flex; align-items: center; justify-content: space-between;
-            background: rgba(0,0,0,0.2); padding: 12px 16px;
-            border-radius: 14px; margin-bottom: 10px; border: 1px solid var(--border);
-        }
-        .task-item.done span { text-decoration: line-through; color: var(--text-dim); }
+        .nav-link { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; color: var(--text-dim); text-decoration: none; margin-bottom: 4px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .nav-link:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+        .nav-link.active { background: var(--accent); color: white; box-shadow: 0 4px 15px var(--accent-glow); }
 
-        .timer-circle {
-            width: 180px; height: 180px; border-radius: 50%;
-            border: 8px solid var(--border); margin: 20px auto;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 2.5rem; font-weight: 800; border-top-color: var(--accent);
-            animation: pulse 2s infinite;
-        }
+        /* SRS CARDS */
+        .srs-card { height: 280px; perspective: 1000px; cursor: pointer; margin-bottom: 20px; }
+        .srs-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+        .srs-card.flipped .srs-inner { transform: rotateY(180deg); }
+        .srs-front, .srs-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 20px; display: flex; align-items: center; justify-content: center; padding: 2rem; text-align: center; border: 1px solid var(--border); }
+        .srs-front { background: rgba(255,255,255,0.03); }
+        .srs-back { background: var(--accent); color: white; transform: rotateY(180deg); }
 
-        /* --- INPUTS & BUTTONS --- */
-        input, select, textarea { 
-            width: 100%; background: rgba(0,0,0,0.3); 
-            border: 1px solid var(--border); color: white; 
-            padding: 14px; border-radius: 14px; margin-bottom: 12px; outline: none; 
-            transition: 0.2s;
-        }
-        input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-glow); }
+        /* HEATMAP */
+        .heatmap { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 15px; }
+        .heat-box { aspect-ratio: 1; border-radius: 3px; background: rgba(255,255,255,0.05); }
+        .heat-active { background: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
 
-        button { 
-            background: var(--accent); color: white; border: none; 
-            padding: 14px 24px; border-radius: 14px; cursor: pointer; 
-            font-weight: 700; transition: 0.3s; display: flex; 
-            align-items: center; justify-content: center; gap: 8px;
-        }
-        button:hover { transform: translateY(-2px); opacity: 0.9; }
-        .btn-outline { background: transparent; border: 1px solid var(--border); }
-        .btn-danger { background: var(--danger); }
+        input, select, textarea { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: white; padding: 12px; border-radius: 12px; outline: none; margin-bottom: 10px; font-size: 0.9rem; }
+        button { padding: 12px 20px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+        .btn-danger { background: rgba(244, 63, 94, 0.1); color: var(--danger); }
 
-        .view { display: none; animation: fadeIn 0.4s ease-out; }
-        .view.active { display: block; }
+        .discord-btn { background: rgba(88, 101, 242, 0.1) !important; color: var(--discord) !important; margin-top: 10px; border: 1px solid rgba(88, 101, 242, 0.2) !important; }
+        .status-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
 
+        .view { display: none; }
+        .view.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes pulse { 0% { border-top-color: var(--accent); } 50% { border-top-color: #6366f1; } 100% { border-top-color: var(--accent); } }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
 
-        /* Mobile Responsive */
-        @media (max-width: 900px) {
-            .layout { flex-direction: column; }
-            nav { width: 100%; height: auto; padding: 1rem; }
-            .grid { grid-template-columns: 1fr; }
-            .col-8, .col-4 { grid-column: span 1; }
-        }
+        #auth-screen { position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
-<body>
+<body class="theme-default">
 
-    <!-- AUTH -->
+    <!-- AUTHENTICATION -->
     <div id="auth-screen">
-        <div class="auth-box">
-            <h1>LOOM <span>OS</span></h1>
-            <p style="color:var(--text-dim); margin-bottom: 2rem;">Your digital academic station</p>
-            <input type="text" id="auth-user" placeholder="Username">
-            <input type="password" id="auth-pass" placeholder="Password">
-            <button onclick="handleAuth('login')" style="width: 100%;">Sign In</button>
-            <button class="btn-outline" onclick="handleAuth('signup')" style="width: 100%; margin-top: 10px;">Create Account</button>
-            <p id="auth-msg" style="margin-top: 1rem; font-size: 0.85rem; color: var(--danger);"></p>
+        <div class="card" style="width: 400px; text-align: center;">
+            <h1 style="font-size: 2.2rem; margin-bottom: 1.5rem;">LOOM <span style="color: var(--accent);">X</span></h1>
+            <input type="text" id="auth-user" placeholder="Identity Handle">
+            <input type="password" id="auth-pass" placeholder="Security Token">
+            <button onclick="handleAuth()" class="btn-primary" style="width: 100%; justify-content: center;">Initialize Session</button>
+            <p id="auth-error" style="color: var(--danger); margin-top: 10px; font-size: 0.8rem;"></p>
         </div>
     </div>
 
-    <!-- MAIN APP -->
+    <!-- MAIN INTERFACE -->
     <div id="app-screen">
-        <div class="layout">
-            <nav>
-                <div class="user-profile">
-                    <div class="avatar" id="user-avatar">?</div>
-                    <div>
-                        <div id="user-display-name" style="font-weight: 700; font-size: 0.95rem;">Student</div>
-                        <div style="font-size: 0.75rem; color: var(--text-dim);">Loom OS v2.0</div>
+        <nav>
+            <div style="margin-bottom: 2rem;">
+                <h2 id="nav-user" style="color: var(--accent); font-weight: 800;">USER</h2>
+                <div style="font-size: 0.6rem; opacity: 0.5; letter-spacing: 1px;">COMPETITIVE GRADE</div>
+            </div>
+
+            <div class="nav-link active" onclick="switchView('v-dash', this)"><i data-lucide="layout-grid"></i> Dashboard</div>
+            <div class="nav-link" onclick="switchView('v-vault', this)"><i data-lucide="archive"></i> Vault</div>
+            <div class="nav-link" onclick="switchView('v-srs', this)"><i data-lucide="brain-circuit"></i> SRS Study</div>
+            <div class="nav-link" onclick="switchView('v-intel', this)"><i data-lucide="line-chart"></i> Intel</div>
+            <div class="nav-link" onclick="switchView('v-config', this)"><i data-lucide="settings"></i> Config</div>
+
+            <a href="https://discord.gg/UTP4HEuPyg" target="_blank" class="nav-link discord-btn">
+                <i data-lucide="message-circle"></i> Community <span class="status-dot" style="margin-left: auto;"></span>
+            </a>
+
+            <div style="margin-top: auto;">
+                <button onclick="logout()" class="btn-ghost" style="width: 100%; border: none; color: var(--danger);"><i data-lucide="power"></i> Termination</button>
+            </div>
+        </nav>
+
+        <main>
+            <!-- DASHBOARD -->
+            <div id="v-dash" class="view active">
+                <h1 id="greeting" style="margin-bottom: 1.5rem;">Initialize...</h1>
+                <div class="grid">
+                    <div class="card col-8">
+                        <h3>Active Protocols</h3>
+                        <div style="display:flex; gap:10px; margin: 15px 0;">
+                            <input type="text" id="task-in" placeholder="New objective..." style="margin:0;">
+                            <button onclick="addTask()" class="btn-primary">Add</button>
+                        </div>
+                        <div id="task-container"></div>
+                    </div>
+                    <div class="card col-4">
+                        <h3 style="text-align: center;">Chrono</h3>
+                        <div id="chrono-display" style="font-size: 3rem; text-align: center; margin: 15px 0;" class="mono">25:00</div>
+                        <button id="chrono-btn" onclick="toggleChrono()" class="btn-primary" style="width: 100%;">Start</button>
                     </div>
                 </div>
-                
-                <div class="nav-item active" onclick="showView('v-dash', this)"><i data-lucide="layout-dashboard"></i> Dashboard</div>
-                <div class="nav-item" onclick="showView('v-sched', this)"><i data-lucide="calendar"></i> Timetable</div>
-                <div class="nav-item" onclick="showView('v-grades', this)"><i data-lucide="line-chart"></i> GPA Tracker</div>
-                
-                <div style="margin-top: 2rem; padding-left: 10px; font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px;">Links</div>
-                <a href="https://discord.gg/UTP4HEuPyg" target="_blank" class="nav-item" style="color: #5865F2;"><i data-lucide="message-circle"></i> Discord</a>
-                
-                <div style="margin-top: auto;">
-                    <button class="btn-outline" onclick="logout()" style="width: 100%; color: var(--danger);"><i data-lucide="log-out"></i> Logout</button>
-                </div>
-            </nav>
+            </div>
 
-            <main>
-                <!-- DASHBOARD -->
-                <div id="v-dash" class="view active">
-                    <h2 style="margin-bottom: 1.5rem;">Welcome back, <span id="welcome-name" style="color: var(--accent);">User</span></h2>
-                    
-                    <div class="grid">
-                        <div class="card col-8">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                                <h3><i data-lucide="check-square" style="vertical-align: middle;"></i> Task Shredder</h3>
-                                <span id="task-count" style="font-size: 0.8rem; color: var(--text-dim);">0 Tasks</span>
-                            </div>
-                            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                                <input type="text" id="task-input" placeholder="Enter a task..." style="margin-bottom: 0;">
-                                <button onclick="shredTask()"><i data-lucide="plus"></i></button>
-                            </div>
-                            <div id="task-list"></div>
-                        </div>
-
-                        <div class="card col-4">
-                            <h3 style="text-align: center;">Focus Mode</h3>
-                            <div class="timer-circle" id="timer-display">25:00</div>
-                            <div style="display: flex; gap: 8px;">
-                                <button onclick="toggleTimer()" id="timer-btn" style="flex: 1;">Start</button>
-                                <button onclick="resetTimer()" class="btn-outline"><i data-lucide="rotate-ccw"></i></button>
-                            </div>
-                        </div>
-
-                        <div class="card col-8">
-                            <h3><i data-lucide="book-open"></i> Quick Notes</h3>
-                            <textarea id="user-notes" style="height: 120px; margin-top: 15px;" oninput="syncData()" placeholder="Write your thoughts..."></textarea>
-                        </div>
-
-                        <div class="card col-4">
-                            <h3>Hydration</h3>
-                            <div style="text-align: center; margin: 20px 0;">
-                                <div id="water-val" style="font-size: 3rem; font-weight: 800;">0</div>
-                                <div style="color: var(--text-dim); font-size: 0.8rem;">Glasses Today</div>
-                            </div>
-                            <button onclick="addWater()" style="width: 100%;"><i data-lucide="droplet"></i> Drink Water</button>
-                        </div>
+            <!-- RESEARCH VAULT -->
+            <div id="v-vault" class="view">
+                <h2>Research Archive</h2>
+                <div class="card" style="margin: 1.5rem 0;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px;">
+                        <input id="vault-title" placeholder="Resource Title">
+                        <input id="vault-url" placeholder="URL (https://...)">
+                        <button onclick="addVaultItem()" class="btn-primary">Archive</button>
                     </div>
                 </div>
+                <div id="vault-list" class="grid"></div>
+            </div>
 
-                <!-- TIMETABLE -->
-                <div id="v-sched" class="view">
-                    <div class="card col-12">
-                        <h2>Weekly Schedule</h2>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 20px;" id="timetable-container">
-                            <!-- Days generated by JS -->
+            <!-- SRS STUDY -->
+            <div id="v-srs" class="view">
+                <div class="grid">
+                    <div class="col-4">
+                        <div class="card">
+                            <h3>Encode Card</h3>
+                            <input id="srs-q" placeholder="Question">
+                            <textarea id="srs-a" placeholder="Answer/Logic"></textarea>
+                            <button onclick="addSRSCard()" class="btn-primary" style="width: 100%;">Commit</button>
                         </div>
-                        <div style="margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 15px;">
-                            <input type="text" id="class-name" placeholder="Subject Name" style="margin-bottom: 0;">
-                            <select id="class-day" style="margin-bottom: 0;">
-                                <option value="0">Monday</option>
-                                <option value="1">Tuesday</option>
-                                <option value="2">Wednesday</option>
-                                <option value="3">Thursday</option>
-                                <option value="4">Friday</option>
-                            </select>
-                            <button onclick="addClass()">Add Class</button>
+                    </div>
+                    <div class="col-8">
+                        <div id="srs-card" class="srs-card" onclick="this.classList.toggle('flipped')">
+                            <div class="srs-inner">
+                                <div class="srs-front" id="srs-front-txt">No cards in deck.</div>
+                                <div class="srs-back" id="srs-back-txt">Add a card to start.</div>
+                            </div>
+                        </div>
+                        <div style="display:flex; justify-content:center; gap:15px;">
+                            <button onclick="nextCard()" class="btn-ghost">Next Card</button>
+                            <button onclick="deleteCurrentCard()" class="btn-danger">Delete Card</button>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- GRADES -->
-                <div id="v-grades" class="view">
-                    <div class="card col-12" style="max-width: 800px; margin: 0 auto;">
-                        <div style="text-align: center; margin-bottom: 2rem;">
-                            <h1 id="gpa-result" style="font-size: 5rem; font-weight: 800; color: var(--accent);">0.00</h1>
-                            <p style="color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px;">Current GPA</p>
-                        </div>
-                        <div id="grade-rows"></div>
-                        <div style="display: flex; gap: 15px; margin-top: 20px;">
-                            <button onclick="addGradeRow()" class="btn-outline">+ Add Subject</button>
-                            <button onclick="calculateGPA()" style="flex: 1;">Calculate & Sync</button>
-                        </div>
+            <!-- INTEL / GPA -->
+            <div id="v-intel" class="view">
+                <div class="grid">
+                    <div class="card col-6">
+                        <h3>Cognitive Stats</h3>
+                        <div id="gpa-display" style="font-size: 4rem; font-weight: 800; margin: 20px 0;">0.00</div>
+                        <p style="opacity: 0.5;">Current Calculated GPA</p>
+                        <div id="gpa-rows" style="margin-top: 20px;"></div>
+                        <button onclick="addGPARow()" class="btn-ghost" style="width: 100%; margin-top: 10px;">+ Add Course</button>
+                    </div>
+                    <div class="card col-6">
+                        <h3>Workload Heatmap</h3>
+                        <div class="heatmap" id="heatmap"></div>
+                        <p style="margin-top: 20px; font-size: 0.8rem; opacity: 0.5;">Activity frequency over the last 28 cycles.</p>
                     </div>
                 </div>
-            </main>
-        </div>
+            </div>
+
+            <!-- CONFIG -->
+            <div id="v-config" class="view">
+                <div class="card col-12">
+                    <h2>System Config</h2>
+                    <div style="margin-top: 20px;">
+                        <p>Interface Theme</p>
+                        <div style="display:flex; gap:10px; margin: 10px 0;">
+                            <button onclick="setTheme('default')" class="btn-primary">Cyber Purple</button>
+                            <button onclick="setTheme('nord')" class="btn-ghost">Nordic Frost</button>
+                        </div>
+                    </div>
+                    <div style="margin-top: 40px; border-top: 1px solid var(--border); padding-top: 20px;">
+                        <button onclick="exportData()" class="btn-ghost">Export Identity Data</button>
+                        <button onclick="wipeData()" class="btn-danger">Total Wipe</button>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
     <script>
-        // --- DATABASE & STATE ---
-        let users = JSON.parse(localStorage.getItem('loom_v2_users')) || {};
-        let currentUser = null;
-        const days = ["Mon", "Tue", "Wed", "Thu", "Fri"];
-
-        // Initialize Lucide Icons
-        lucide.createIcons();
-
-        // --- AUTH LOGIC ---
-        function handleAuth(type) {
-            const u = document.getElementById('auth-user').value.trim().toLowerCase();
-            const p = document.getElementById('auth-pass').value.trim();
-            const msg = document.getElementById('auth-msg');
-
-            if(!u || !p) { msg.innerText = "Fill all fields"; return; }
-
-            if(type === 'signup') {
-                if(users[u]) { msg.innerText = "Username taken!"; return; }
-                users[u] = { 
-                    pass: p, 
-                    data: { notes: "", tasks: [], water: 0, timetable: [[],[],[],[],[]], grades: [] } 
-                };
-                saveToDisk();
-                msg.style.color = "var(--success)";
-                msg.innerText = "Account ready! Please login.";
-            } else {
-                if(users[u] && users[u].pass === p) {
-                    currentUser = u;
-                    localStorage.setItem('loom_session', u);
-                    launchApp();
-                } else { msg.innerText = "Invalid credentials."; }
-            }
-        }
-
-        window.onload = () => {
-            const saved = localStorage.getItem('loom_session');
-            if (saved && users[saved]) { currentUser = saved; launchApp(); }
+        let state = JSON.parse(localStorage.getItem('loom_x_data')) || {
+            users: { "admin": { pass: "admin", vault: [], tasks: [], srs: [], grades: [] } }
         };
+        let currentUser = localStorage.getItem('loom_x_session');
+        let cardIdx = 0;
 
-        function launchApp() {
+        // AUTH
+        function handleAuth() {
+            const u = document.getElementById('auth-user').value.toLowerCase();
+            const p = document.getElementById('auth-pass').value;
+            if (state.users[u] && state.users[u].pass === p) login(u);
+            else if (!state.users[u] && u.length > 2) {
+                state.users[u] = { pass: p, vault: [], tasks: [], srs: [], grades: [] };
+                login(u);
+            } else document.getElementById('auth-error').innerText = "Security token invalid.";
+        }
+
+        function login(u) {
+            currentUser = u;
+            localStorage.setItem('loom_x_session', u);
             document.getElementById('auth-screen').style.display = 'none';
-            document.getElementById('app-screen').style.display = 'block';
-            document.getElementById('welcome-name').innerText = currentUser.charAt(0).toUpperCase() + currentUser.slice(1);
-            loadUserData();
+            document.getElementById('app-screen').style.display = 'flex';
+            init();
         }
 
-        function logout() {
-            localStorage.removeItem('loom_session');
-            location.reload();
-        }
+        function logout() { localStorage.removeItem('loom_x_session'); location.reload(); }
 
-        function saveToDisk() {
-            localStorage.setItem('loom_v2_users', JSON.stringify(users));
-        }
+        function save() { localStorage.setItem('loom_x_data', JSON.stringify(state)); }
 
-        function syncData() {
-            if(!currentUser) return;
-            users[currentUser].data.notes = document.getElementById('user-notes').value;
-            saveToDisk();
-        }
-
-        // --- NAVIGATION ---
-        function showView(id, el) {
+        // NAVIGATION
+        function switchView(id, el) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(v => v.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             el.classList.add('active');
             lucide.createIcons();
         }
 
-        // --- TASKS ---
-        function shredTask() {
-            const val = document.getElementById('task-input').value;
-            if(!val) return;
-            users[currentUser].data.tasks.push({ text: val, id: Date.now(), done: false });
-            document.getElementById('task-input').value = "";
+        // INIT
+        function init() {
+            const user = state.users[currentUser];
+            document.getElementById('nav-user').innerText = currentUser.toUpperCase();
+            document.getElementById('greeting').innerText = `Welcome, Operative ${currentUser}.`;
             renderTasks();
-            saveToDisk();
+            renderVault();
+            renderSRS();
+            renderGPA();
+            renderHeatmap();
+            lucide.createIcons();
+        }
+
+        // TASKS
+        function addTask() {
+            const val = document.getElementById('task-in').value;
+            if (!val) return;
+            state.users[currentUser].tasks.push({ id: Date.now(), txt: val, done: false });
+            document.getElementById('task-in').value = "";
+            renderTasks(); save();
         }
 
         function renderTasks() {
-            const list = document.getElementById('task-list');
-            const tasks = users[currentUser].data.tasks;
-            document.getElementById('task-count').innerText = `${tasks.filter(t=>!t.done).length} Pending`;
-            
-            list.innerHTML = tasks.map(t => `
-                <div class="task-item ${t.done ? 'done' : ''}">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTask(${t.id})" style="width:18px; height:18px; margin:0; cursor:pointer;">
-                        <span>${t.text}</span>
+            const container = document.getElementById('task-container');
+            container.innerHTML = state.users[currentUser].tasks.map(t => `
+                <div class="card" style="padding: 10px; margin-bottom: 8px; display:flex; justify-content:space-between; align-items:center; background: rgba(255,255,255,0.02);">
+                    <span style="${t.done ? 'text-decoration:line-through; opacity:0.5' : ''}">${t.txt}</span>
+                    <div style="display:flex; gap:10px;">
+                        <i data-lucide="check" onclick="toggleTask(${t.id})" style="cursor:pointer; color:var(--success)"></i>
+                        <i data-lucide="trash-2" onclick="delTask(${t.id})" style="cursor:pointer; color:var(--danger)"></i>
                     </div>
-                    <button class="btn-danger" style="padding: 5px 10px; font-size: 10px;" onclick="deleteTask(${t.id})">DELETE</button>
                 </div>
             `).join('');
+            lucide.createIcons();
         }
 
         function toggleTask(id) {
-            const task = users[currentUser].data.tasks.find(t => t.id === id);
-            if(task) task.done = !task.done;
-            renderTasks();
-            saveToDisk();
+            const t = state.users[currentUser].tasks.find(x => x.id === id);
+            t.done = !t.done; renderTasks(); save();
         }
 
-        function deleteTask(id) {
-            users[currentUser].data.tasks = users[currentUser].data.tasks.filter(t => t.id !== id);
-            renderTasks();
-            saveToDisk();
+        function delTask(id) {
+            state.users[currentUser].tasks = state.users[currentUser].tasks.filter(x => x.id !== id);
+            renderTasks(); save();
         }
 
-        // --- TIMETABLE ---
-        function renderTimetable() {
-            const container = document.getElementById('timetable-container');
-            container.innerHTML = days.map((day, i) => `
-                <div class="card" style="padding: 12px; min-height: 200px; background: rgba(0,0,0,0.2);">
-                    <div style="color: var(--accent); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 10px;">${day}</div>
-                    <div id="day-${i}">
-                        ${users[currentUser].data.timetable[i].map((c, idx) => `
-                            <div style="background:var(--border); font-size: 0.8rem; padding: 6px 10px; border-radius: 8px; margin-bottom: 5px; display:flex; justify-content:space-between;">
-                                ${c} <span onclick="removeClass(${i}, ${idx})" style="cursor:pointer; opacity:0.5;">×</span>
-                            </div>
-                        `).join('')}
+        // VAULT
+        function addVaultItem() {
+            const title = document.getElementById('vault-title').value;
+            const url = document.getElementById('vault-url').value;
+            if (!title || !url) return;
+            state.users[currentUser].vault.push({ title, url });
+            document.getElementById('vault-title').value = "";
+            document.getElementById('vault-url').value = "";
+            renderVault(); save();
+        }
+
+        function renderVault() {
+            const container = document.getElementById('vault-list');
+            container.innerHTML = state.users[currentUser].vault.map((v, i) => `
+                <div class="card col-4">
+                    <h4 style="margin-bottom:10px;">${v.title}</h4>
+                    <div style="display:flex; gap:10px;">
+                        <a href="${v.url}" target="_blank" class="btn-primary" style="font-size:0.7rem; padding:5px 10px; text-decoration:none;">Access</a>
+                        <button onclick="delVault(${i})" class="btn-danger" style="padding:5px 10px; font-size:0.7rem;">Delete</button>
                     </div>
                 </div>
             `).join('');
         }
+        function delVault(i) { state.users[currentUser].vault.splice(i, 1); renderVault(); save(); }
 
-        function addClass() {
-            const name = document.getElementById('class-name').value;
-            const day = document.getElementById('class-day').value;
-            if(!name) return;
-            users[currentUser].data.timetable[day].push(name);
-            document.getElementById('class-name').value = "";
-            renderTimetable();
-            saveToDisk();
+        // SRS
+        function addSRSCard() {
+            const q = document.getElementById('srs-q').value;
+            const a = document.getElementById('srs-a').value;
+            if (!q || !a) return;
+            state.users[currentUser].srs.push({ q, a });
+            document.getElementById('srs-q').value = "";
+            document.getElementById('srs-a').value = "";
+            renderSRS(); save();
         }
 
-        function removeClass(day, idx) {
-            users[currentUser].data.timetable[day].splice(idx, 1);
-            renderTimetable();
-            saveToDisk();
+        function renderSRS() {
+            const cards = state.users[currentUser].srs;
+            if (cards.length > 0) {
+                document.getElementById('srs-front-txt').innerText = cards[cardIdx].q;
+                document.getElementById('srs-back-txt').innerText = cards[cardIdx].a;
+            }
+        }
+        function nextCard() {
+            const cards = state.users[currentUser].srs;
+            if (cards.length > 1) {
+                cardIdx = (cardIdx + 1) % cards.length;
+                document.getElementById('srs-card').classList.remove('flipped');
+                setTimeout(renderSRS, 200);
+            }
+        }
+        function deleteCurrentCard() {
+            state.users[currentUser].srs.splice(cardIdx, 1);
+            cardIdx = 0;
+            renderSRS(); save();
         }
 
-        // --- GPA TRACKER ---
-        function addGradeRow(s="", g="", c="") {
-            const div = document.createElement('div');
-            div.className = "grade-row";
-            div.style.display = "grid"; 
-            div.style.gridTemplateColumns = "1fr 100px 100px 50px"; 
-            div.style.gap = "10px";
-            div.innerHTML = `
-                <input type="text" placeholder="Subject" value="${s}" class="g-sub">
-                <input type="number" placeholder="Grade" value="${g}" class="g-gr">
-                <input type="number" placeholder="Credits" value="${c}" class="g-cr">
-                <button onclick="this.parentElement.remove()" class="btn-danger" style="height: 45px; padding:0;">×</button>
-            `;
-            document.getElementById('grade-rows').appendChild(div);
+        // GPA / INTEL
+        function addGPARow(n = "", g = "") {
+            const container = document.getElementById('gpa-rows');
+            const row = document.createElement('div');
+            row.style.display = "flex"; row.style.gap = "10px"; row.style.marginBottom = "10px";
+            row.innerHTML = `<input placeholder="Subject" value="${n}" oninput="calcGPA()"> <input type="number" step="0.1" placeholder="Grade" value="${g}" oninput="calcGPA()" class="g-val">`;
+            container.appendChild(row);
         }
 
-        function calculateGPA() {
-            const rows = document.querySelectorAll('.grade-row');
-            let totalPts = 0, totalCr = 0;
-            users[currentUser].data.grades = [];
-
-            rows.forEach(r => {
-                const sub = r.querySelector('.g-sub').value;
-                const gr = parseFloat(r.querySelector('.g-gr').value);
-                const cr = parseFloat(r.querySelector('.g-cr').value);
-                if(!isNaN(gr) && !isNaN(cr)) {
-                    users[currentUser].data.grades.push({sub, gr, cr});
-                    totalPts += (gr * cr); totalCr += cr;
-                }
+        function calcGPA() {
+            const grades = document.querySelectorAll('.g-val');
+            let total = 0, count = 0;
+            grades.forEach(g => {
+                const val = parseFloat(g.value);
+                if (!isNaN(val)) { total += val; count++; }
             });
-
-            const res = totalCr > 0 ? (totalPts / totalCr).toFixed(2) : "0.00";
-            document.getElementById('gpa-result').innerText = res;
-            saveToDisk();
+            const res = count > 0 ? (total / count).toFixed(2) : "0.00";
+            document.getElementById('gpa-display').innerText = res;
+            // Sync to state
+            state.users[currentUser].grades = Array.from(grades).map(g => g.value);
+            save();
         }
 
-        // --- WATER ---
-        function addWater() {
-            users[currentUser].data.water++;
-            document.getElementById('water-val').innerText = users[currentUser].data.water;
-            saveToDisk();
+        function renderGPA() {
+            const container = document.getElementById('gpa-rows');
+            container.innerHTML = "";
+            const savedGrades = state.users[currentUser].grades || [];
+            if (savedGrades.length > 0) savedGrades.forEach(g => addGPARow("", g));
+            else addGPARow();
+            calcGPA();
         }
 
-        // --- TIMER ---
-        let timerTime = 1500, timerInt = null;
-        function toggleTimer() {
-            const btn = document.getElementById('timer-btn');
-            if(timerInt) { 
-                clearInterval(timerInt); 
-                timerInt = null; 
-                btn.innerText = "Start"; 
+        function renderHeatmap() {
+            const h = document.getElementById('heatmap');
+            h.innerHTML = Array.from({ length: 28 }, (_, i) => `<div class="heat-box ${Math.random() > 0.7 ? 'heat-active' : ''}"></div>`).join('');
+        }
+
+        // CHRONO
+        let timer = 1500, timerInt = null;
+        function toggleChrono() {
+            const btn = document.getElementById('chrono-btn');
+            if (timerInt) {
+                clearInterval(timerInt); timerInt = null; btn.innerText = "Resume";
             } else {
                 timerInt = setInterval(() => {
-                    timerTime--;
-                    updateTimerDisplay();
-                    if(timerTime <= 0) { 
-                        clearInterval(timerInt); 
-                        alert("Session complete! Take a break."); 
-                        resetTimer();
-                    }
+                    timer--; updateChrono();
+                    if (timer <= 0) { clearInterval(timerInt); alert("Protocol complete."); timer = 1500; updateChrono(); }
                 }, 1000);
                 btn.innerText = "Pause";
             }
         }
-        function resetTimer() {
-            clearInterval(timerInt);
-            timerInt = null;
-            timerTime = 1500;
-            updateTimerDisplay();
-            document.getElementById('timer-btn').innerText = "Start";
-        }
-        function updateTimerDisplay() {
-            let m = Math.floor(timerTime/60), s = timerTime%60;
-            document.getElementById('timer-display').innerText = `${m}:${s<10?'0':''}${s}`;
+        function updateChrono() {
+            const m = Math.floor(timer / 60), s = timer % 60;
+            document.getElementById('chrono-display').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
         }
 
-        function loadUserData() {
-            const d = users[currentUser].data;
-            document.getElementById('user-avatar').innerText = currentUser[0].toUpperCase();
-            document.getElementById('user-display-name').innerText = currentUser;
-            document.getElementById('user-notes').value = d.notes || "";
-            document.getElementById('water-val').innerText = d.water || 0;
-            renderTasks();
-            renderTimetable();
-            
-            document.getElementById('grade-rows').innerHTML = "";
-            if(d.grades.length > 0) d.grades.forEach(g => addGradeRow(g.sub, g.gr, g.cr));
-            else addGradeRow();
-            calculateGPA();
+        // CONFIG
+        function setTheme(t) {
+            document.body.className = t === 'nord' ? 'theme-nord' : 'theme-default';
         }
+
+        function exportData() {
+            const data = JSON.stringify(state.users[currentUser]);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = 'loom_identity.json'; a.click();
+        }
+
+        function wipeData() { if (confirm("Terminate all local data?")) { localStorage.clear(); location.reload(); } }
+
+        if (currentUser) login(currentUser);
     </script>
 </body>
 </html>
